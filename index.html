@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Drag</title>
+  <link href="https://fonts.googleapis.com/css?family=Mada:300,400,900" rel="stylesheet">
+  <style>
+  * {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+}
+  body {
+    margin:0;
+    font-family: 'Mada', sans-serif;
+    color:black;
+  }
+
+  body.dragging #slider {
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+  }
+
+  ul{
+    display:flex;
+    flex-wrap:nowrap;
+    margin:auto;
+    top:0;
+    bottom:0;
+    position:absolute;
+    height:150px;
+    padding:0 50px;
+    /*transition:0.3s margin;*/
+    will-change:margin;
+  }
+
+  #slider {
+    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+  }
+
+  li {
+    list-style: none;
+    display:inline-block;
+    margin:0;
+    padding:0 50px;
+    outline: none;
+    font-size:50px;
+    line-height: 150px;
+    font-weight:300;
+  }
+
+  body.dragging li {
+
+  }
+
+  #slider {
+    position:fixed;
+    overflow:hidden;
+    left:0;
+    right:0;
+    height:100vh;
+  }
+  </style>
+</head>
+<body>
+  <div id="slider">
+    <ul>
+      <li>Lorem&nbsp;ipsum</li>
+      <li>Sin&nbsp;dolores</li>
+      <li>Ed&nbsp;mollis</li>
+      <li>Nullam&nbsp;maximus</li>
+      <li>Interdum</li>
+      <li>Lorem&nbsp;ipsum</li>
+      <li>Sin&nbsp;dolores</li>
+      <li>Ed&nbsp;mollis</li>
+      <li>Nullam&nbsp;maximus</li>
+      <li>Interdum</li>
+    </ul>
+</div>
+  <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
