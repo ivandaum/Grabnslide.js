@@ -14,6 +14,7 @@ var Grabnslide = function(conf){
   }
 
   this.offsetLeft = 0
+  
   this.bind()
 }
 
@@ -72,10 +73,3 @@ Grabnslide.prototype.moveContainer = function() {
 
   this.container.style.marginLeft = this.offsetLeft + 'px'
 }
-
-
-var Grabnslide = new Grabnslide({
-  movingContainer: document.querySelector('#slider ul'),
-  triggerElement: document.querySelector('#slider'),
-  cell: document.querySelectorAll('#slider ul li')
-})
