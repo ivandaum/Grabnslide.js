@@ -1,4 +1,4 @@
-var Grabber = function(conf){
+var Grabnslide = function(conf){
   this.isGrabbing = false;
   this.container = conf.movingContainer || null
   this.triggerElement = conf.triggerElement || null
@@ -17,38 +17,52 @@ var Grabber = function(conf){
   this.bind()
 }
 
-Grabber.prototype.bind = function() {
+Grabnslide.prototype.userStartGrabbing = function() {
+  document.querySelector('body').className = 'dragging'
+  this.isGrabbing = true
+}
+
+Grabnslide.prototype.userStopGrabbing = function() {
+  this.isGrabbing = false
+  document.querySelector('body').className = ''
+}
+
+Grabnslide.prototype.bind = function() {
   var that = this
 
   this.triggerElement.addEventListener('mousedown',function() {
-    document.querySelector('body').className = 'dragging'
-    that.isGrabbing = true
+    that.userStartGrabbing()
   })
 
   this.triggerElement.addEventListener('mouseup',function() {
-    that.isGrabbing = false
-    document.querySelector('body').className = ''
+    that.userStopGrabbing()
   })
 
   this.triggerElement.addEventListener('mousemove', function(event) {
+    that.saveAndMoveContainer(event)
+  })
 
-
-    if(that.position.old != that.position.current) {
-      that.position.old = {x:that.position.current.x,y:that.position.current.y}
-    }
-
-    if(event.clientX) {
-      that.position.current.x = event.clientX
-      that.position.current.y = event.clientY
-    }
-
-    if(that.isGrabbing) {
-        that.moveContainer()
-    }
+  document.addEventListener('mouseleave',function() {
+    that.userStopGrabbing()
   })
 }
 
-Grabber.prototype.moveContainer = function() {
+Grabnslide.prototype.saveAndMoveContainer = function(event) {
+
+      if(this.position.old != this.position.current) {
+        this.position.old = {x:this.position.current.x,y:this.position.current.y}
+      }
+
+      if(event.clientX) {
+        this.position.current.x = event.clientX
+        this.position.current.y = event.clientY
+      }
+      if(this.isGrabbing) {
+          this.moveContainer()
+      }
+}
+
+Grabnslide.prototype.moveContainer = function() {
 
   var diff = (this.position.old.x - this.position.current.x)
   this.offsetLeft = parseInt(this.container.style.marginLeft) - diff * 0.8
@@ -60,7 +74,7 @@ Grabber.prototype.moveContainer = function() {
 }
 
 
-var grabber = new Grabber({
+var Grabnslide = new Grabnslide({
   movingContainer: document.querySelector('#slider ul'),
   triggerElement: document.querySelector('#slider'),
   cell: document.querySelectorAll('#slider ul li')
