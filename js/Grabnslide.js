@@ -4,29 +4,23 @@ var Grabnslide = function(conf){
   this.triggerElement = conf.triggerElement || null
   this.cell = conf.cell || null
 
-  this.firstCell = this.cell[0]
-  this.lastCell = this.cell[this.cell.length - 1]
-
   this.container.style.marginLeft = 0
+  this.easing = 0.7
+  this.interval = null
+
   this.position = {
       old: {x:0,y:0},
       current: {x:0,y:0}
   }
 
   this.offsetLeft = 0
-  
+
   this.bind()
 }
 
-Grabnslide.prototype.userStartGrabbing = function() {
-  document.querySelector('body').className = 'dragging'
-  this.isGrabbing = true
-}
-
-Grabnslide.prototype.userStopGrabbing = function() {
-  this.isGrabbing = false
-  document.querySelector('body').className = ''
-}
+// ---------------
+// EVENT LISTENERS
+// ---------------
 
 Grabnslide.prototype.bind = function() {
   var that = this
@@ -40,15 +34,28 @@ Grabnslide.prototype.bind = function() {
   })
 
   this.triggerElement.addEventListener('mousemove', function(event) {
-    that.saveAndMoveContainer(event)
+    that.saveValues(event)
+
+    if(that.isGrabbing) {
+      that.offsetLeft = (that.position.old.x - that.position.current.x)
+    }
+
   })
 
   document.addEventListener('mouseleave',function() {
     that.userStopGrabbing()
   })
+
+  this.getFirstCell()
+  this.getLastCell()
+  this.moveContainer()
 }
 
-Grabnslide.prototype.saveAndMoveContainer = function(event) {
+// -----------------------------------
+// FUNCTION TO CALC AND MOVE CONTAINER
+// -----------------------------------
+
+Grabnslide.prototype.saveValues = function(event) {
 
       if(this.position.old != this.position.current) {
         this.position.old = {x:this.position.current.x,y:this.position.current.y}
@@ -58,18 +65,58 @@ Grabnslide.prototype.saveAndMoveContainer = function(event) {
         this.position.current.x = event.clientX
         this.position.current.y = event.clientY
       }
-      if(this.isGrabbing) {
-          this.moveContainer()
-      }
+
 }
 
 Grabnslide.prototype.moveContainer = function() {
+  var that = this
 
-  var diff = (this.position.old.x - this.position.current.x)
-  this.offsetLeft = parseInt(this.container.style.marginLeft) - diff * 0.8
+  requestAnimationFrame(function() {
+    that.moveContainer()
+  })
 
-  if(this.offsetLeft >= 0) this.offsetLeft = 0
-  if(-this.offsetLeft >= this.lastCell.offsetLeft  && diff >= 0) this.offsetLeft = parseInt(this.container.style.marginLeft)
 
-  this.container.style.marginLeft = this.offsetLeft + 'px'
+  // VELOCITY HERE
+
+  if(this.offsetLeft >= 0) this.offsetLeft -= this.easing
+  if(this.offsetLeft <= 0) this.offsetLeft += this.easing
+
+  var base = parseInt(this.container.style.marginLeft)
+  var marginLeft = base + (-this.offsetLeft)
+
+  this.setContainerMargin(marginLeft)
+}
+
+Grabnslide.prototype.setContainerMargin = function(marginLeft) {
+  if(marginLeft >= 0) marginLeft = 0
+  if(-marginLeft >= this.lastCell.offsetLeft) marginLeft = parseInt(this.container.style.marginLeft)
+  this.container.style.marginLeft = marginLeft + 'px'
+}
+
+// -------------------
+// GETTERS AND SETTERS
+// -------------------
+
+Grabnslide.prototype.getFirstCell = function() {
+    this.firstCell = this.cell[0]
+    return this.firstCell
+}
+
+Grabnslide.prototype.getLastCell = function() {
+    this.lastCell = this.cell[this.cell.length - 1]
+    return this.lastCell
+}
+
+// ----------------------------------
+// FUNCTIONS RELATIVE TO USER ACTIONS
+// ----------------------------------
+
+Grabnslide.prototype.userStartGrabbing = function() {
+  document.querySelector('body').className = 'dragging'
+  this.isGrabbing = true
+}
+
+Grabnslide.prototype.userStopGrabbing = function() {
+  document.querySelector('body').className = ''
+  this.isGrabbing = false
 }
