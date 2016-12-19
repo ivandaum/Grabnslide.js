@@ -121,18 +121,17 @@ Grabnslide.prototype.setContainerMargin = function(marginLeft) {
 Grabnslide.prototype.offsetToZero = function() {
 
   var absOffsetLeft = Math.abs(Math.round(this.offsetLeft))
+
   if(absOffsetLeft == 0) {
     this.offsetLeft = absOffsetLeft
     return true
   }
-
-  var off = this.Easing.easeInOutQuint(this.offsetLeft)
-
-  console.log(Math.round(off))
-
-  if(this.offsetLeft < 0) this.offsetLeft += this.easing
-  if(this.offsetLeft > 0) this.offsetLeft -= this.easing
-
+  
+  if(this.offsetLeft < 0) {
+    this.offsetLeft += -(this.offsetLeft) / 10
+  } else if(this.offsetLeft > 0)  {
+    this.offsetLeft -= this.offsetLeft / 10
+  }
 }
 
 // -------------------
