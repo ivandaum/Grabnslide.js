@@ -1,7 +1,7 @@
 var Grabnslide = function(conf){
   this.isGrabbing = false;
   this.container = conf.movingContainer || null
-  this.triggerElement = conf.triggerElement || null
+  this.triggerElement = conf.triggerElement || this.container
   this.cell = conf.cell || null
 
   this.container.style.marginLeft = 0
@@ -127,11 +127,7 @@ Grabnslide.prototype.offsetToZero = function() {
     return true
   }
   
-  if(this.offsetLeft < 0) {
-    this.offsetLeft += -(this.offsetLeft) / 10
-  } else if(this.offsetLeft > 0)  {
-    this.offsetLeft -= this.offsetLeft / 10
-  }
+  this.offsetLeft -= this.offsetLeft / 10
 }
 
 // -------------------
