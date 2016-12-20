@@ -5,7 +5,7 @@ var Grabnslide = function(conf){
   this.cell = conf.cell || null
 
   this.container.style.marginLeft = 0
-  this.easing = 0.2
+  this.easing = 10
   this.duration = 200
 
   this.position = {
@@ -66,6 +66,10 @@ Grabnslide.prototype.bind = function() {
     that.userStopGrabbing()
   })
 
+  this.triggerElement.addEventListener('mouseleave',function() {
+    that.userStopGrabbing()
+  })
+
   this.getFirstCell()
   this.getLastCell()
   this.moveContainer()
@@ -106,16 +110,28 @@ Grabnslide.prototype.moveContainer = function() {
     this.offsetToZero()
   }
 
-  var base = parseInt(this.container.style.marginLeft)
-  var marginLeft = base - (this.offsetLeft * 1.2)
+
+  var marginLeft  = this.isMarginInLimit()
 
   this.setContainerMargin(marginLeft)
 }
 
 Grabnslide.prototype.setContainerMargin = function(marginLeft) {
-  if(marginLeft >= 0) marginLeft = 0
-  if(-marginLeft >= this.lastCell.offsetLeft) marginLeft = parseInt(this.container.style.marginLeft)
   this.container.style.marginLeft = marginLeft + 'px'
+}
+
+Grabnslide.prototype.isMarginInLimit = function() {
+  var base = parseInt(this.container.style.marginLeft)
+  var marginLeft = base - this.offsetLeft
+
+  if(marginLeft > 0 && !this.isGrabbing) {
+    marginLeft -= marginLeft / this.easing
+  }
+  if(-marginLeft >= this.lastCell.offsetLeft && !this.isGrabbing) {
+    marginLeft -= (this.lastCell.offsetLeft + marginLeft) / this.easing
+  }
+  return marginLeft
+
 }
 
 Grabnslide.prototype.offsetToZero = function() {
@@ -126,8 +142,8 @@ Grabnslide.prototype.offsetToZero = function() {
     this.offsetLeft = absOffsetLeft
     return true
   }
-  
-  this.offsetLeft -= this.offsetLeft / 10
+
+  this.offsetLeft -= this.offsetLeft / this.easing
 }
 
 // -------------------
