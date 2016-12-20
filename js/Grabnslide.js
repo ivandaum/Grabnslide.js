@@ -1,6 +1,6 @@
 var Grabnslide = function(conf){
   this.isGrabbing = false;
-  this.container = conf.movingContainer || null
+  this.container = conf.container || null
   this.triggerElement = conf.triggerElement || this.container
   this.cell = conf.cell || null
 
@@ -59,7 +59,6 @@ Grabnslide.prototype.bind = function() {
     if(that.isGrabbing) {
       that.offsetLeft = (that.position.old.x - that.position.current.x)
     }
-
   })
 
   document.addEventListener('mouseleave',function() {
@@ -83,6 +82,8 @@ Grabnslide.prototype.saveValues = function(event) {
 
       if(this.position.old != this.position.current) {
         this.position.old = {x:this.position.current.x,y:this.position.current.y}
+      } else {
+          this.userStopGrabbing()
       }
 
       if(event.clientX) {
@@ -105,12 +106,9 @@ Grabnslide.prototype.moveContainer = function() {
 
   // VELOCITY HERE
 
-
   if(this.isGrabbing == false && this.offsetLeft != 0) {
     this.offsetToZero()
   }
-
-
   var marginLeft  = this.isMarginInLimit()
 
   this.setContainerMargin(marginLeft)
