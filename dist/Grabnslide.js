@@ -71,15 +71,17 @@ Grabnslide.prototype.bind = function() {
     that.userStopGrabbing()
   })
 
-
   // PHONE EVENTS
 
-  this.triggerElement.addEventListener('touchstart',function() {
+  this.triggerElement.addEventListener('touchstart',function(event) {
     that.userStartGrabbing()
+
+    // Force value save to prevent instant big offset
+    var customEvent = event.changedTouches[0]
+    that.saveValues(customEvent)
   })
 
   this.triggerElement.addEventListener('touchmove', function(event) {
-
     var customEvent = event.changedTouches[0]
     that.userMoves(customEvent)
   })
