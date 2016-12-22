@@ -4,8 +4,13 @@ var Grabnslide = function(conf){
   this.triggerElement = conf.triggerElement || this.container
   this.cell = conf.cell || null
 
+
+  this.phoneEvent = false
+
   this.container.style.marginLeft = 0
   this.easing = 10
+
+  if(this.phoneEvent) this.easing = 5
 
   this.position = {
       old: {x:0,y:0},
@@ -75,26 +80,34 @@ Grabnslide.prototype.bind = function() {
 
   this.triggerElement.addEventListener('touchstart',function(event) {
     that.userStartGrabbing()
-
+    that.phoneEvent = true
     // Force value save to prevent instant big offset
     var customEvent = event.changedTouches[0]
     that.saveValues(customEvent)
   })
 
   this.triggerElement.addEventListener('touchmove', function(event) {
+    that.phoneEvent = true
+
     var customEvent = event.changedTouches[0]
     that.userMoves(customEvent)
   })
 
   document.addEventListener('touchleave',function() {
+    that.phoneEvent = true
+
     that.userStopGrabbing()
   })
 
   document.addEventListener('touchend',function() {
+    that.phoneEvent = true
+
     that.userStopGrabbing()
   })
 
   document.addEventListener('touchcancel',function() {
+    that.phoneEvent = true
+
     that.userStopGrabbing()
   })
 
