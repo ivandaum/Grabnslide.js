@@ -6,12 +6,12 @@ var Grabnslide = function(conf){
 
   this.container.style.marginLeft = 0
   this.easing = 10
-  this.duration = 200
 
   this.position = {
       old: {x:0,y:0},
       current: {x:0,y:0}
   }
+  this.cellsWidth = 0
 
   this.Easing = {
 
@@ -32,10 +32,37 @@ var Grabnslide = function(conf){
       easeOutQuint:         function (t) { return 1+(--t)*t*t*t*t },
       easeInOutQuint:       function (t) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
   }
+  this.tools = {
+    // http://jaketrent.com/post/addremove-classes-raw-javascript
 
+    hasClass: function(el, className) {
+      if (el.classList)
+        return el.classList.contains(className)
+      else
+        return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+    },
+    addClass:function(el, className) {
+      if (el.classList)
+        el.classList.add(className)
+      else if (!hasClass(el, className)) el.className += " " + className
+    },
+    removeClass:function(el, className) {
+      if (el.classList)
+        el.classList.remove(className)
+      else if (hasClass(el, className)) {
+        var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
+        el.className=el.className.replace(reg, ' ')
+      }
+    }
+  }
   this.offsetLeft = 0
 
+  if(conf.cell && conf.cell.length >= 1) {
+    this.getFirstCell()
+    this.getLastCell()
+  }
   this.bind()
+
 }
 
 // ---------------
@@ -68,9 +95,6 @@ Grabnslide.prototype.bind = function() {
   this.triggerElement.addEventListener('mouseleave',function() {
     that.userStopGrabbing()
   })
-
-  this.getFirstCell()
-  this.getLastCell()
   this.moveContainer()
 }
 
@@ -91,6 +115,15 @@ Grabnslide.prototype.saveValues = function(event) {
         this.position.current.y = event.clientY
       }
 
+
+      if(this.cell && this.cell.length >= 1) {
+          this.cellsWidth = 0
+
+          for(var i =0;i<this.cell.length;i++) {
+            this.cellsWidth += this.cell[i].offsetWidth
+          }
+      }
+
 }
 
 // -----------------------------------
@@ -104,12 +137,10 @@ Grabnslide.prototype.moveContainer = function() {
     that.moveContainer()
   })
 
-  // VELOCITY HERE
-
   if(this.isGrabbing == false && this.offsetLeft != 0) {
     this.offsetToZero()
   }
-  var marginLeft  = this.isMarginInLimit()
+  var marginLeft = this.isMarginInLimit()
 
   this.setContainerMargin(marginLeft)
 }
@@ -121,13 +152,16 @@ Grabnslide.prototype.setContainerMargin = function(marginLeft) {
 Grabnslide.prototype.isMarginInLimit = function() {
   var base = parseInt(this.container.style.marginLeft)
   var marginLeft = base - this.offsetLeft
+  var limitMargin = this.cellsWidth - this.lastCell.offsetWidth
 
   if(marginLeft > 0 && !this.isGrabbing) {
     marginLeft -= marginLeft / this.easing
   }
-  if(-marginLeft >= this.lastCell.offsetLeft && !this.isGrabbing) {
-    marginLeft -= (this.lastCell.offsetLeft + marginLeft) / this.easing
+   else if(-marginLeft >= limitMargin && !this.isGrabbing && this.cellsWidth != 0) {
+    marginLeft -= (limitMargin + marginLeft) / this.easing
   }
+
+
   return marginLeft
 
 }
@@ -163,11 +197,11 @@ Grabnslide.prototype.getLastCell = function() {
 // ----------------------------------
 
 Grabnslide.prototype.userStartGrabbing = function() {
-  document.querySelector('body').className = 'dragging'
+  this.tools.addClass(document.querySelector('body'),'dragging')
   this.isGrabbing = true
 }
 
 Grabnslide.prototype.userStopGrabbing = function() {
-  document.querySelector('body').className = ''
+  this.tools.removeClass(document.querySelector('body'),'dragging')
   this.isGrabbing = false
 }

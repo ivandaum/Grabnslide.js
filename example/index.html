@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Drag</title>
+  <style>
+
+  * {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+  }
+
+  body {
+    margin:0;
+    font-family: Arial, Helvetica,Verdana, sans-serif;
+    color:black;
+  }
+
+  body.dragging ul {
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+  }
+
+  ul{
+    display:flex;
+    flex-wrap:nowrap;
+    margin:0;
+    padding:0;
+    height:150px;
+    background:#eee;
+    will-change:margin;
+    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+  }
+
+  li {
+    list-style: none;
+    display:inline-block;
+    margin:0;
+    padding:0 50px;
+    outline: none;
+    font-size:50px;
+    line-height: 150px;
+    font-weight:300;
+  }
+
+  #slider {
+    height:150px;
+    width:100%;
+    overflow:hidden;
+    background:#d6d6d6;
+  }
+</style>
+</head>
+<body>
+  <div id="slider">
+    <ul>
+      <li>Lorem&nbsp;ipsum</li>
+      <li>Sin&nbsp;dolores</li>
+      <li>Ed&nbsp;mollis</li>
+      <li>Nullam&nbsp;maximus</li>
+      <li>Interdum</li>
+      <li>Lorem&nbsp;ipsum</li>
+      <li>Sin&nbsp;dolores</li>
+      <li>Ed&nbsp;mollis</li>
+      <li>Nullam&nbsp;maximus</li>
+      <li>Interdum</li>
+    </ul>
+</div>
+  <script type="text/javascript" src="../dist/Grabnslide.js"></script>
+  <script>
+    var Grabnslide = new Grabnslide({
+      container: document.querySelector('#slider ul'),
+      cell: document.querySelectorAll('#slider ul li')
+    })
+  </script>
+</body>
+</html>
