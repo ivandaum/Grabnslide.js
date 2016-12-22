@@ -61,20 +61,41 @@ Grabnslide.prototype.bind = function() {
   })
 
   this.triggerElement.addEventListener('mousemove', function(event) {
-    that.saveValues(event)
-
-    if(that.isGrabbing) {
-      that.offsetLeft = (that.position.old.x - that.position.current.x)
-    }
+    that.userMoves(event)
   })
 
   document.addEventListener('mouseleave',function() {
     that.userStopGrabbing()
   })
-
   this.triggerElement.addEventListener('mouseleave',function() {
     that.userStopGrabbing()
   })
+
+
+  // PHONE EVENTS
+
+  this.triggerElement.addEventListener('touchstart',function() {
+    that.userStartGrabbing()
+  })
+
+  this.triggerElement.addEventListener('touchmove', function(event) {
+
+    var customEvent = event.changedTouches[0]
+    that.userMoves(customEvent)
+  })
+
+  document.addEventListener('touchleave',function() {
+    that.userStopGrabbing()
+  })
+
+  document.addEventListener('touchend',function() {
+    that.userStopGrabbing()
+  })
+
+  document.addEventListener('touchcancel',function() {
+    that.userStopGrabbing()
+  })
+
   this.moveContainer()
 }
 
@@ -175,6 +196,14 @@ Grabnslide.prototype.getLastCell = function() {
 // ----------------------------------
 // FUNCTIONS RELATIVE TO USER ACTIONS
 // ----------------------------------
+
+Grabnslide.prototype.userMoves = function(event) {
+  this.saveValues(event)
+
+  if(this.isGrabbing) {
+    this.offsetLeft = (this.position.old.x - this.position.current.x)
+  }
+}
 
 Grabnslide.prototype.userStartGrabbing = function() {
   this.tools.addClass(document.querySelector('body'),'dragging')
