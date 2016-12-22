@@ -1,4 +1,4 @@
-Grabnslide is a light javascript librairy to activate a dragable slider on a bloc
+Grabnslide is a light javascript librairy to activate a dragable slider on a bloc. You can see a quick demo [here](http://lab.ivandaum.fr/Grabnslide.js/example/)
 
 # Use
 
