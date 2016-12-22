@@ -9,9 +9,6 @@ var Grabnslide = function(conf){
 
   this.container.style.marginLeft = 0
   this.easing = 10
-
-  if(this.phoneEvent) this.easing = 5
-
   this.position = {
       old: {x:0,y:0},
       current: {x:0,y:0}
@@ -166,8 +163,12 @@ Grabnslide.prototype.setContainerMargin = function(marginLeft) {
 }
 
 Grabnslide.prototype.isMarginInLimit = function() {
+
+  // accelerating on phone
+  var hasOffset = this.phoneEvent == true ? 1.5 : 1
+
   var base = parseInt(this.container.style.marginLeft)
-  var marginLeft = base - this.offsetLeft
+  var marginLeft = base - (this.offsetLeft * hasOffset)
   var limitMargin = this.cellsWidth - this.lastCell.offsetWidth
 
   if(marginLeft > 0 && !this.isGrabbing) {
