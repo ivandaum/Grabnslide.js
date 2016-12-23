@@ -10,7 +10,7 @@ Grabnslide is a light javascript librairy to activate a dragable slider on a blo
   })
 
 ```
-
+When grabbing the slider, a `dragging` class is added to your `body`.
 # Options
 
 `container` : the draggued block

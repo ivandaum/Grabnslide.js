@@ -1,0 +1,21 @@
+{
+  "name": "grabnslide",
+  "version": "1.0.0",
+  "description": "A simple javascript plugin to make a draggable slider",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivandaum/Grabnslide.js.git"
+  },
+  "author": "Ivan Daum",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ivandaum/Grabnslide.js/issues"
+  },
+  "homepage": "https://github.com/ivandaum/Grabnslide.js#readme"
+}

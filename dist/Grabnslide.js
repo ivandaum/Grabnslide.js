@@ -45,6 +45,7 @@ var Grabnslide = function(conf){
   }
   this.bind()
 
+  return this
 }
 
 // ---------------

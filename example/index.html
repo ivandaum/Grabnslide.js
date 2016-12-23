@@ -32,7 +32,6 @@
     flex-wrap:nowrap;
     margin:0;
     padding:0;
-    height:150px;
     background:#eee;
     will-change:margin;
     cursor: move;
@@ -45,15 +44,13 @@
     list-style: none;
     display:inline-block;
     margin:0;
-    padding:0 50px;
+    padding:25px;
     outline: none;
-    font-size:50px;
-    line-height: 150px;
+    font-size:25px;
     font-weight:300;
   }
 
-  #slider {
-    height:150px;
+  .slider {
     width:100%;
     overflow:hidden;
     background:#d6d6d6;
@@ -61,25 +58,30 @@
 </style>
 </head>
 <body>
-  <div id="slider">
+  <div id="slider1" class="slider">
     <ul>
-      <li>Lorem&nbsp;ipsum</li>
-      <li>Sin&nbsp;dolores</li>
-      <li>Ed&nbsp;mollis</li>
-      <li>Nullam&nbsp;maximus</li>
-      <li>Interdum</li>
-      <li>Lorem&nbsp;ipsum</li>
-      <li>Sin&nbsp;dolores</li>
-      <li>Ed&nbsp;mollis</li>
-      <li>Nullam&nbsp;maximus</li>
-      <li>Interdum</li>
+      <li>Article&nbsp;1/15</li>
+      <li>Article&nbsp;2/15</li>
+      <li>Article&nbsp;3/15</li>
+      <li>Article&nbsp;4/15</li>
+      <li>Article&nbsp;5/15</li>
+      <li>Article&nbsp;6/15</li>
+      <li>Article&nbsp;7/15</li>
+      <li>Article&nbsp;8/15</li>
+      <li>Article&nbsp;9/15</li>
+      <li>Article&nbsp;10/15</li>
+      <li>Article&nbsp;11/15</li>
+      <li>Article&nbsp;12/15</li>
+      <li>Article&nbsp;13/15</li>
+      <li>Article&nbsp;14/15</li>
+      <li>Article&nbsp;15/15</li>
     </ul>
 </div>
   <script type="text/javascript" src="../dist/Grabnslide.js"></script>
   <script>
     var Grabnslide = new Grabnslide({
-      container: document.querySelector('#slider ul'),
-      cell: document.querySelectorAll('#slider ul li')
+      container: document.querySelector('#slider1 ul'),
+      cell: document.querySelectorAll('#slider1 ul li')
     })
   </script>
 </body>
