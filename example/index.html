@@ -4,85 +4,55 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Drag</title>
-  <style>
-
-  * {
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: -moz-none;
-    -o-user-select: none;
-    user-select: none;
-  }
-
-  body {
-    margin:0;
-    font-family: Arial, Helvetica,Verdana, sans-serif;
-    color:black;
-  }
-
-  body.dragging ul {
-    cursor: -webkit-grabbing;
-    cursor: grabbing;
-    cursor: -webkit-grabbing;
-  }
-
-  ul{
-    display:flex;
-    flex-wrap:nowrap;
-    margin:0;
-    padding:0;
-    background:#eee;
-    will-change:margin;
-    cursor: move;
-    cursor: grab;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
-  }
-
-  li {
-    list-style: none;
-    display:inline-block;
-    margin:0;
-    padding:25px;
-    outline: none;
-    font-size:25px;
-    font-weight:300;
-  }
-
-  .slider {
-    width:100%;
-    overflow:hidden;
-    background:#d6d6d6;
-  }
-</style>
+  <title>Grabnslide</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+  <link rel="stylesheet" href="../node_modules/prismjs/themes/prism.css">
+  <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-  <div id="slider1" class="slider">
-    <ul>
-      <li>Article&nbsp;1/15</li>
-      <li>Article&nbsp;2/15</li>
-      <li>Article&nbsp;3/15</li>
-      <li>Article&nbsp;4/15</li>
-      <li>Article&nbsp;5/15</li>
-      <li>Article&nbsp;6/15</li>
-      <li>Article&nbsp;7/15</li>
-      <li>Article&nbsp;8/15</li>
-      <li>Article&nbsp;9/15</li>
-      <li>Article&nbsp;10/15</li>
-      <li>Article&nbsp;11/15</li>
-      <li>Article&nbsp;12/15</li>
-      <li>Article&nbsp;13/15</li>
-      <li>Article&nbsp;14/15</li>
-      <li>Article&nbsp;15/15</li>
-    </ul>
-</div>
-  <script type="text/javascript" src="../dist/Grabnslide.js"></script>
-  <script>
-    var Grabnslide = new Grabnslide({
-      container: document.querySelector('#slider1 ul'),
-      cell: document.querySelectorAll('#slider1 ul li')
-    })
-  </script>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 navigation text-md-right hidden-xl-down">
+        <ul class="nav">
+          <li class="nav-item"><b>Summary</b></li>
+          <li class="nav-item">
+            <a class="nav-link" href="#begining">Beginning</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-9">
+        <h1 class="h1" id="begining">Grab'n slide</h1>
+        <p class="mb-3"><em>A light javascript plugin to make a draggable slider</em></p>
+
+<section class="example">
+<p>Example : </p>
+        <div id="slider1" class="slider mb-3">
+          <ul>
+            <li>Article&nbsp;<b>1/10</b></li>
+            <li>Article&nbsp;<b>2/10</b></li>
+            <li>Article&nbsp;<b>3/10</b></li>
+            <li>Article&nbsp;<b>4/10</b></li>
+            <li>Article&nbsp;<b>5/10</b></li>
+            <li>Article&nbsp;<b>6/10</b></li>
+            <li>Article&nbsp;<b>7/10</b></li>
+            <li>Article&nbsp;<b>8/10</b></li>
+            <li>Article&nbsp;<b>9/10</b></li>
+            <li>Article&nbsp;<b>10/10</b></li>
+          </ul>
+        </div>
+<p>Code : </p>
+<pre><code class="language-javascript">new Grabnslide({
+  container: document.querySelector('#slider1 ul'),
+  cell: document.querySelectorAll('#slider1 ul li')
+})</code></pre>
+</section>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../src/Grabnslide.js"></script>
+  <script type="text/javascript" src="assets/js/main.js"></script>
+  <script type="text/javascript" src="../node_modules/prismjs/prism.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
 </body>
 </html>

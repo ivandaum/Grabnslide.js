@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/ivandaum/Grabnslide.js/issues"
   },
-  "homepage": "https://github.com/ivandaum/Grabnslide.js#readme"
+  "homepage": "https://github.com/ivandaum/Grabnslide.js#readme",
+  "dependencies": {
+    "prismjs": "^1.6.0"
+  }
 }

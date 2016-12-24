@@ -1,0 +1,63 @@
+body {
+  margin:0;
+  font-family: Arial, Helvetica,Verdana, sans-serif;
+  color:black;
+  font-size:15px;
+}
+
+body.dragging ul {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+.container {
+  padding:50px 0;
+}
+.slider {
+  margin:25px 0;
+}
+.slider ul{
+  display:flex;
+  flex-wrap:nowrap;
+  margin:0;
+  padding:0;
+  will-change:margin;
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+.slider ul li {
+  list-style: none;
+  display:inline-block;
+  margin:0;
+  padding:25px;
+  outline: none;
+  font-size:25px;
+  font-weight:300;
+}
+.slider ul li b {
+  font-size:10px;
+}
+
+.slider {
+  width:100%;
+  overflow:hidden;
+  background:rgba(0,0,0,.05);
+}
+
+.slider * {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+/** PRISM overwite **/
+
+pre[class*="language-"] {
+  margin:0;
+  overflow-x: sroll;
+}
