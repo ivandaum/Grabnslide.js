@@ -12,21 +12,25 @@
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-md-3 navigation text-md-right hidden-xl-down">
-        <ul class="nav">
-          <li class="nav-item"><b>Summary</b></li>
-          <li class="nav-item">
-            <a class="nav-link" href="#begining">Beginning</a>
+      <div class="col-xs-12 col-xl-3 summary mb-3">
+        <ul class="fixed p-2">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#concept">Concept</a></li>
+          <li>
+            <a href="#options">Options</a>
+            <ul class="submenu">
+              <li><a href="#container">Container</a></li>
+              <li><a href="#cell">Cell</a></li>
+              <li><a href="#trigger-element">triggerElement</a></li>
+            </ul>
           </li>
         </ul>
       </div>
-      <div class="col-md-9">
-        <h1 class="h1" id="begining">Grab'n slide</h1>
-        <p class="mb-3"><em>A light javascript plugin to make a draggable slider</em></p>
-
-<section class="example">
-<p>Example : </p>
-        <div id="slider1" class="slider mb-3">
+      <div class="col-xs-12 col-xl-9">
+        <h1 class="h1" id="introduction">Grab'n slide</h1>
+        <p class="mb-0">Grab'n slide is a light javascript librairy to make a draggable slider.
+          Try it: </p>
+        <div id="slider1" class="slider">
           <ul>
             <li>Article&nbsp;<b>1/10</b></li>
             <li>Article&nbsp;<b>2/10</b></li>
@@ -40,19 +44,128 @@
             <li>Article&nbsp;<b>10/10</b></li>
           </ul>
         </div>
-<p>Code : </p>
-<pre><code class="language-javascript">new Grabnslide({
-  container: document.querySelector('#slider1 ul'),
-  cell: document.querySelectorAll('#slider1 ul li')
+
+        <h2 class="h2" id="concept">Concept</h2>
+        <p>Grab'n slide <b>doesn't add any html</b> to your code. You build your own slider, the librairy make it draggable. That's it.</p>
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#html1" role="tab" aria-expanded="true">HTML</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#css1" role="tab">CSS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#javascript1" role="tab">Javascript</a>
+            </li>
+          </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content tab-justify">
+              <div class="tab-pane fade in active" id="html1" role="tabpanel">
+      <pre ><code  class="language-html">&lt;div id="slider" class="slider"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Article&lt;/li&gt;
+    &lt;li&gt;Article&lt;/li&gt;
+    &lt;li&gt;Article&lt;/li&gt;
+    &lt;li&gt;Article&lt;/li&gt;
+    &lt;li&gt;Article&lt;/li&gt;
+    &lt;li&gt;Article&lt;/li&gt;
+    &lt;li&gt;Article&lt;/li&gt;
+    &lt;li&gt;Article&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+    <div class="tab-pane fade out" id="css1" role="tabpanel">
+      <pre><code class="language-css">.slider ul{
+  display:flex;
+  flex-wrap:nowrap;
+  margin:0;
+  padding:0;
+  will-change:margin;
+}
+
+.slider ul li {
+  list-style: none;
+  display:inline-block;
+  margin:0;
+  padding:25px;
+}
+
+// For cursor grabbing style, you can add these lanes
+
+body.dragging ul {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.slider ul {
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+</code></pre>
+              </div>
+              <div class="tab-pane fade out" id="javascript1" role="tabpanel">
+                <pre><code class="language-javascript">new Grabnslide({
+  container: document.querySelector('#slider ul'),
+  cell: document.querySelectorAll('#slider ul li')
 })</code></pre>
-</section>
+              </div>
+        </div>
+
+        <h2 class="h2" id="options">Options</h2>
+        <p><em>the following * are mandatory</em></p>
+        <h3 id="container" class="h3 mt-3">container*</h3>
+            <p>Represent the draggued container. Its <code>margin-left</code> will change on drag (don't forget to add a <code><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/will-change">will-change</a></code> balise on this element).</p>
+            <pre><code class="language-javascript">new Grabnslide({
+  container: document.querySelector('#slider ul')
+})</code></pre>
+
+        <h3 id="cell" class="h3 mt-3">cell</h3>
+
+            <p>If the <code>cell</code> option <b>isn't specified</b>, the <code>container</code>'s full width will be used to calculate the container's margin range (to avoid being out of window).</p>
+            <p>If the <code>cell</code> option <b>is specified</b>, the container's margin limit will be the sum of all cells's width (can be more accurate, especially if you work with <code>flex-box</code>).</p>
+            <pre><code class="language-javascript">new Grabnslide({
+  container: document.querySelector('#slider ul'),
+  cell: document.querySelectorAll('#slider ul li')
+})</code></pre>
+
+        <h3 id="trigger-element" class="h3 mt-3">triggerElement</h3>
+            <p>The <code>triggerElement</code> is the clicked making the <code>container</code> moves. If it isn't specified, the <code>container</code> will be used as trigger.</p>
+            <pre><code class="language-javascript">new Grabnslide({
+  container: document.querySelector('#slider ul'),
+  triggerElement: document.querySelector('#slider #sidebar')
+})</code></pre>
+            <p class="mt-1">Try it :</p>
+            <div id="slider3" class="slider triggered">
+              <ul>
+                <li>Article&nbsp;<b>1/10</b></li>
+                <li>Article&nbsp;<b>2/10</b></li>
+                <li>Article&nbsp;<b>3/10</b></li>
+                <li>Article&nbsp;<b>4/10</b></li>
+                <li>Article&nbsp;<b>5/10</b></li>
+                <li>Article&nbsp;<b>6/10</b></li>
+                <li>Article&nbsp;<b>7/10</b></li>
+                <li>Article&nbsp;<b>8/10</b></li>
+                <li>Article&nbsp;<b>9/10</b></li>
+                <li>Article&nbsp;<b>10/10</b></li>
+              </ul>
+
+              <div id="slider-3-trigger" class="trigger">I'm the trigger. Drag me</div>
+            </div>
+
+        <!-- end -->
       </div>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script type="text/javascript" src="../src/Grabnslide.js"></script>
-  <script type="text/javascript" src="assets/js/main.js"></script>
   <script type="text/javascript" src="../node_modules/prismjs/prism.js"></script>
+  <script type="text/javascript" src="assets/js/main.js"></script>
   <!-- Latest compiled and minified JavaScript -->
-  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
 </body>
 </html>

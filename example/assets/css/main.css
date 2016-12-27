@@ -5,10 +5,17 @@ body {
   font-size:15px;
 }
 
-body.dragging ul {
+body.dragging ul,body.dragging .trigger {
   cursor: -webkit-grabbing;
   cursor: grabbing;
   cursor: -webkit-grabbing;
+}
+.trigger {
+  will-change:margin;
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
 }
 .container {
   padding:50px 0;
@@ -16,18 +23,24 @@ body.dragging ul {
 .slider {
   margin:25px 0;
 }
+.summary ul {
+  background:#efefef;
+}
 .slider ul{
   display:flex;
   flex-wrap:nowrap;
   margin:0;
   padding:0;
   will-change:margin;
+}
+
+.slider:not(.triggered) ul {
+
   cursor: move;
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
 }
-
 .slider ul li {
   list-style: none;
   display:inline-block;
@@ -55,9 +68,54 @@ body.dragging ul {
   user-select: none;
 }
 
-/** PRISM overwite **/
+.trigger {
+  line-height:25px;
+  position:absolute;
+  bottom:-10px;
+  padding:0 25px;
+  background:pink;
+}
+/** PRISM overwitting **/
 
 pre[class*="language-"] {
   margin:0;
   overflow-x: sroll;
+}
+
+.language-html .tag {
+  font-size: 100%;
+  font-weight: normal;
+  line-height: 0;
+}
+/** Bootstrap overwritting **/
+
+
+ul {
+  padding-left: 20px;
+  list-style-type: none;
+}
+ul li {
+  line-height:25px;
+}
+ul li ul li {
+  font-size:0.8em;
+    line-height:1.5em;
+}
+
+h2 {
+  margin-top:50px;
+  margin-bottom:10px !important;
+}
+h3 {
+  margin-top:25px;
+  font-size:1.25rem !important;
+  margin-bottom:10px !important
+}
+
+iframe {
+  border:none;
+}
+@media(min-width:1200px) {
+  .summary {float:right}
+  .fixed {position: fixed}
 }
