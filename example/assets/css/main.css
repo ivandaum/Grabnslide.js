@@ -5,7 +5,7 @@ body {
   font-size:15px;
 }
 
-body.dragging ul,body.dragging .trigger {
+body.dragging ul, body.dragging .trigger {
   cursor: -webkit-grabbing;
   cursor: grabbing;
   cursor: -webkit-grabbing;
@@ -34,12 +34,15 @@ body.dragging ul,body.dragging .trigger {
   will-change:margin;
 }
 
-.slider:not(.triggered) ul {
+.slider ul {
 
   cursor: move;
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
+}
+.slider.triggered ul {
+  cursor: default;
 }
 .slider ul li {
   list-style: none;
@@ -118,4 +121,16 @@ iframe {
 @media(min-width:1200px) {
   .summary {float:right}
   .fixed {position: fixed}
+}
+
+#slider1 ul {
+  width:2000px;
+  display:block;
+}
+#slider1 ul li {
+  width:200px;
+  display:block;
+  padding:25px;
+  float:left;
+  margin:0;
 }

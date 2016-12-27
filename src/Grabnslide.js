@@ -129,15 +129,6 @@ Grabnslide.prototype.saveValues = function(event) {
         this.position.current.y = event.clientY
       }
 
-
-      if(this.cell && this.cell.length >= 1) {
-          this.cellsWidth = 0
-
-          for(var i =0;i<this.cell.length;i++) {
-            this.cellsWidth += this.cell[i].offsetWidth
-          }
-      }
-
 }
 
 // -----------------------------------
@@ -146,6 +137,16 @@ Grabnslide.prototype.saveValues = function(event) {
 
 Grabnslide.prototype.moveContainer = function() {
   var that = this
+
+
+
+  if(this.cell && this.cell.length >= 1) {
+      this.cellsWidth = 0
+
+      for(var i =0;i<this.cell.length;i++) {
+        this.cellsWidth += this.cell[i].offsetWidth
+      }
+  }
 
   requestAnimationFrame(function() {
     that.moveContainer()
@@ -170,12 +171,21 @@ Grabnslide.prototype.isMarginInLimit = function() {
 
   var base = parseInt(this.container.style.marginLeft)
   var marginLeft = base - (this.offsetLeft * hasOffset)
-  var limitMargin = this.cellsWidth - this.lastCell.offsetWidth
+
+  if(this.cell) {
+    var limitMargin = this.cellsWidth - this.lastCell.offsetWidth
+  } else {
+      var limitMargin = this.container.offsetWidth - this.container.parentElement.offsetWidth
+  }
+
 
   if(marginLeft > 0 && !this.isGrabbing) {
     marginLeft -= marginLeft / this.easing
   }
    else if(-marginLeft >= limitMargin && !this.isGrabbing && this.cellsWidth != 0) {
+    marginLeft -= (limitMargin + marginLeft) / this.easing
+  }
+  else if(-marginLeft >= limitMargin && !this.isGrabbing && this.cellsWidth == 0) {
     marginLeft -= (limitMargin + marginLeft) / this.easing
   }
 
