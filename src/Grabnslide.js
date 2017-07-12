@@ -1,243 +1,240 @@
-var Grabnslide = function(conf){
-  this.isGrabbing = false;
-  this.container = conf.container || null
-  this.triggerElement = conf.triggerElement || this.container
-  this.cell = conf.cell || null
+class Grabnslide {
+   constructor(conf) {
+     this.isGrabbing = false;
+     this.container = conf.container || null;
+     this.triggerElement = conf.triggerElement || this.container;
+     this.cell = conf.cell || null;
+     this.phoneEvent = false;
+
+     this.container.style.marginLeft = 0;
+     this.easing = 10;
+     this.position = {
+         old: {x:0,y:0},
+         current: {x:0,y:0}
+     }
+     
+     this.cellsWidth = 0;
+
+     this.tools = {
+
+       // http://jaketrent.com/post/addremove-classes-raw-javascript
+       hasClass: function(el, className) {
+         if (el.classList)
+           return el.classList.contains(className);
+         else
+           return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+       },
+       addClass:function(el, className) {
+         if (el.classList)
+           el.classList.add(className);
+         else if (!hasClass(el, className)) el.className += " " + className;
+       },
+       removeClass:function(el, className) {
+         if (el.classList)
+           el.classList.remove(className);
+         else if (hasClass(el, className)) {
+           let reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+           el.className=el.className.replace(reg, ' ');
+         }
+       }
+     }
+
+     this.offsetLeft = 0;
+
+     if(conf.cell && conf.cell.length >= 1) {
+       this.getFirstCell();
+       this.getLastCell();
+     }
+     this.bind();
+
+     return this;
+   }
 
 
-  this.phoneEvent = false
+   // ---------------
+   // EVENT LISTENERS
+   // ---------------
+   bind() {
+     var _this = this;
 
-  this.container.style.marginLeft = 0
-  this.easing = 10
-  this.position = {
-      old: {x:0,y:0},
-      current: {x:0,y:0}
-  }
-  this.cellsWidth = 0
-  this.tools = {
-    // http://jaketrent.com/post/addremove-classes-raw-javascript
+     this.triggerElement.addEventListener('mousedown',function() {
+       _this.userStartGrabbing();
+     })
 
-    hasClass: function(el, className) {
-      if (el.classList)
-        return el.classList.contains(className)
-      else
-        return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
-    },
-    addClass:function(el, className) {
-      if (el.classList)
-        el.classList.add(className)
-      else if (!hasClass(el, className)) el.className += " " + className
-    },
-    removeClass:function(el, className) {
-      if (el.classList)
-        el.classList.remove(className)
-      else if (hasClass(el, className)) {
-        var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
-        el.className=el.className.replace(reg, ' ')
-      }
-    }
-  }
-  this.offsetLeft = 0
+     this.triggerElement.addEventListener('mouseup',function() {
+       _this.userStopGrabbing();
+     })
 
-  if(conf.cell && conf.cell.length >= 1) {
-    this.getFirstCell()
-    this.getLastCell()
-  }
-  this.bind()
+     this.triggerElement.addEventListener('mousemove', function(event) {
+       _this.userMoves(event);
+     })
 
-  return this
-}
+     document.addEventListener('mouseleave',function() {
+       _this.userStopGrabbing();
+     })
+     this.triggerElement.addEventListener('mouseleave',function() {
+       _this.userStopGrabbing();
+     })
 
-// ---------------
-// EVENT LISTENERS
-// ---------------
+     // PHONE EVENTS
 
-Grabnslide.prototype.bind = function() {
-  var that = this
+     this.triggerElement.addEventListener('touchstart',function(event) {
+       _this.userStartGrabbing();
+       _this.phoneEvent = true;
 
-  this.triggerElement.addEventListener('mousedown',function() {
-    that.userStartGrabbing()
-  })
+       // Force value save to prevent instant big offset
+       _this.saveValues(event.changedTouches[0]);
+     })
 
-  this.triggerElement.addEventListener('mouseup',function() {
-    that.userStopGrabbing()
-  })
+     this.triggerElement.addEventListener('touchmove', function(event) {
+       _this.phoneEvent = true;
 
-  this.triggerElement.addEventListener('mousemove', function(event) {
-    that.userMoves(event)
-  })
+       _this.userMoves(event.changedTouches[0]);
+     })
 
-  document.addEventListener('mouseleave',function() {
-    that.userStopGrabbing()
-  })
-  this.triggerElement.addEventListener('mouseleave',function() {
-    that.userStopGrabbing()
-  })
+     document.addEventListener('touchleave',function() {
+       _this.phoneEvent = true;
 
-  // PHONE EVENTS
+       _this.userStopGrabbing();
+     })
 
-  this.triggerElement.addEventListener('touchstart',function(event) {
-    that.userStartGrabbing()
-    that.phoneEvent = true
-    // Force value save to prevent instant big offset
-    var customEvent = event.changedTouches[0]
-    that.saveValues(customEvent)
-  })
+     document.addEventListener('touchend',function() {
+       _this.phoneEvent = true
 
-  this.triggerElement.addEventListener('touchmove', function(event) {
-    that.phoneEvent = true
+       _this.userStopGrabbing();
+     })
 
-    var customEvent = event.changedTouches[0]
-    that.userMoves(customEvent)
-  })
+     document.addEventListener('touchcancel',function() {
+       _this.phoneEvent = true
 
-  document.addEventListener('touchleave',function() {
-    that.phoneEvent = true
+       _this.userStopGrabbing();
+     })
 
-    that.userStopGrabbing()
-  })
+     this.moveContainer();
+   }
 
-  document.addEventListener('touchend',function() {
-    that.phoneEvent = true
+   // ------------
+   // CALC METHODS
+   // ------------
 
-    that.userStopGrabbing()
-  })
+   saveValues(event) {
+     if(this.position.old != this.position.current) {
+       this.position.old = {x:this.position.current.x,y:this.position.current.y};
+     } else {
+         this.userStopGrabbing();
+     }
 
-  document.addEventListener('touchcancel',function() {
-    that.phoneEvent = true
+     if(event.clientX) {
+       this.position.current.x = event.clientX;
+       this.position.current.y = event.clientY;
+     }
+   }
 
-    that.userStopGrabbing()
-  })
+    // -----------------------------------
+    // FUNCTION TO MOVE CONTAINER
+    // -----------------------------------
 
-  this.moveContainer()
-}
+   moveContainer() {
+     var _this = this;
 
-// ------------
-// CALC METHODS
-// ------------
+     if(this.cell && this.cell.length >= 1) {
+         this.cellsWidth = 0;
 
-Grabnslide.prototype.saveValues = function(event) {
+         for(let i = 0;i<this.cell.length;i++) {
+           this.cellsWidth += this.cell[i].offsetWidth;
+         }
+     }
 
-      if(this.position.old != this.position.current) {
-        this.position.old = {x:this.position.current.x,y:this.position.current.y}
-      } else {
-          this.userStopGrabbing()
-      }
+     requestAnimationFrame(function() {
+       _this.moveContainer();
+     })
 
-      if(event.clientX) {
-        this.position.current.x = event.clientX
-        this.position.current.y = event.clientY
-      }
+     if(this.isGrabbing == false && this.offsetLeft != 0) {
+       this.offsetToZero();
+     }
+     let marginLeft = this.isMarginInLimit();
 
-}
+     this.setContainerMargin(marginLeft);
+   }
 
-// -----------------------------------
-// FUNCTION TO MOVE CONTAINER
-// -----------------------------------
+   setContainerMargin(marginLeft) {
+     this.container.style.marginLeft = marginLeft + 'px';
+   }
 
-Grabnslide.prototype.moveContainer = function() {
-  var that = this
+   isMarginInLimit() {
 
+     // accelerating on phone
+     let hasOffset = this.phoneEvent == true ? 1.5 : 1;
 
+     let base = parseInt(this.container.style.marginLeft);
+     let marginLeft = base - (this.offsetLeft * hasOffset);
 
-  if(this.cell && this.cell.length >= 1) {
-      this.cellsWidth = 0
+     let limitMargin = this.container.offsetWidth - this.container.parentElement.offsetWidth;
+     if(this.cell) {
+       limitMargin = this.cellsWidth - this.lastCell.offsetWidth;
+     }
 
-      for(var i =0;i<this.cell.length;i++) {
-        this.cellsWidth += this.cell[i].offsetWidth
-      }
-  }
-
-  requestAnimationFrame(function() {
-    that.moveContainer()
-  })
-
-  if(this.isGrabbing == false && this.offsetLeft != 0) {
-    this.offsetToZero()
-  }
-  var marginLeft = this.isMarginInLimit()
-
-  this.setContainerMargin(marginLeft)
-}
-
-Grabnslide.prototype.setContainerMargin = function(marginLeft) {
-  this.container.style.marginLeft = marginLeft + 'px'
-}
-
-Grabnslide.prototype.isMarginInLimit = function() {
-
-  // accelerating on phone
-  var hasOffset = this.phoneEvent == true ? 1.5 : 1
-
-  var base = parseInt(this.container.style.marginLeft)
-  var marginLeft = base - (this.offsetLeft * hasOffset)
-
-  if(this.cell) {
-    var limitMargin = this.cellsWidth - this.lastCell.offsetWidth
-  } else {
-      var limitMargin = this.container.offsetWidth - this.container.parentElement.offsetWidth
-  }
+     if(marginLeft > 0 && !this.isGrabbing) {
+       marginLeft -= marginLeft / this.easing;
+     }
+     else if(-marginLeft >= limitMargin && !this.isGrabbing && this.cellsWidth != 0) {
+       marginLeft -= (limitMargin + marginLeft) / this.easing;
+     }
+     else if(-marginLeft >= limitMargin && !this.isGrabbing && this.cellsWidth == 0) {
+       marginLeft -= (limitMargin + marginLeft) / this.easing;
+     }
 
 
-  if(marginLeft > 0 && !this.isGrabbing) {
-    marginLeft -= marginLeft / this.easing
-  }
-   else if(-marginLeft >= limitMargin && !this.isGrabbing && this.cellsWidth != 0) {
-    marginLeft -= (limitMargin + marginLeft) / this.easing
-  }
-  else if(-marginLeft >= limitMargin && !this.isGrabbing && this.cellsWidth == 0) {
-    marginLeft -= (limitMargin + marginLeft) / this.easing
-  }
+     return marginLeft;
+
+   }
+
+   offsetToZero() {
+
+     let absOffsetLeft = Math.abs(Math.round(this.offsetLeft));
+
+     if(absOffsetLeft == 0) {
+       this.offsetLeft = absOffsetLeft;
+       return true;
+     }
+
+     this.offsetLeft -= this.offsetLeft / this.easing;
+   }
 
 
-  return marginLeft
+   // -------------------
+   // GETTERS AND SETTERS
+   // -------------------
 
-}
+   getFirstCell() {
+       this.firstCell = this.cell[0];
+       return this.firstCell;
+   }
 
-Grabnslide.prototype.offsetToZero = function() {
+   getLastCell() {
+       this.lastCell = this.cell[this.cell.length - 1];
+       return this.lastCell;
+   }
 
-  var absOffsetLeft = Math.abs(Math.round(this.offsetLeft))
+   // ----------------------------------
+   // FUNCTIONS RELATIVE TO USER ACTIONS
+   // ----------------------------------
 
-  if(absOffsetLeft == 0) {
-    this.offsetLeft = absOffsetLeft
-    return true
-  }
+   userMoves(event) {
+     this.saveValues(event);
 
-  this.offsetLeft -= this.offsetLeft / this.easing
-}
+     if(this.isGrabbing) {
+       this.offsetLeft = (this.position.old.x - this.position.current.x);
+     }
+   }
 
-// -------------------
-// GETTERS AND SETTERS
-// -------------------
+   userStartGrabbing() {
+     this.tools.addClass(document.querySelector('body'),'dragging');
+     this.isGrabbing = true;
+   }
 
-Grabnslide.prototype.getFirstCell = function() {
-    this.firstCell = this.cell[0]
-    return this.firstCell
-}
-
-Grabnslide.prototype.getLastCell = function() {
-    this.lastCell = this.cell[this.cell.length - 1]
-    return this.lastCell
-}
-
-// ----------------------------------
-// FUNCTIONS RELATIVE TO USER ACTIONS
-// ----------------------------------
-
-Grabnslide.prototype.userMoves = function(event) {
-  this.saveValues(event)
-
-  if(this.isGrabbing) {
-    this.offsetLeft = (this.position.old.x - this.position.current.x)
-  }
-}
-
-Grabnslide.prototype.userStartGrabbing = function() {
-  this.tools.addClass(document.querySelector('body'),'dragging')
-  this.isGrabbing = true
-}
-
-Grabnslide.prototype.userStopGrabbing = function() {
-  this.tools.removeClass(document.querySelector('body'),'dragging')
-  this.isGrabbing = false
+   userStopGrabbing() {
+     this.tools.removeClass(document.querySelector('body'),'dragging');
+     this.isGrabbing = false;
+   }
 }
